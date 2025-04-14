@@ -605,6 +605,7 @@ impl PerspectiveInstance {
     }
 
     pub async fn telepresence_signal_from_link_language(&self, mut signal: PerspectiveExpression) {
+        log::info!("GOT TELEPRESENCE SIGNAL from link language: {:?}", signal);
         signal.verify_signatures();
         let handle = self.persisted.lock().await.clone();
         get_global_pubsub()
@@ -1503,6 +1504,7 @@ impl PerspectiveInstance {
         remote_agent_did: String,
         payload: PerspectiveExpression,
     ) -> Result<(), AnyError> {
+        log::info!("SENDING SIGNAL TO {}", remote_agent_did);
         let mut link_language_guard = self.link_language.lock().await;
         if let Some(link_language) = link_language_guard.as_mut() {
             link_language.send_signal(remote_agent_did, payload).await
@@ -1516,6 +1518,7 @@ impl PerspectiveInstance {
         payload: PerspectiveExpression,
         loopback: bool,
     ) -> Result<(), AnyError> {
+        log::info!("SENDING BROADCAST {:?}", payload);
         if loopback {
             // send back to all clients through neighbourhood signal subscription
             let payload_clone = payload.clone();
